@@ -10,6 +10,9 @@ Future<void> addStudent(StudentModel value) async {
 
   //Update the id in L add the new student
   value.id = _id;
+  //Update the id back to the DB
+  await studentDB.put(_id, value);
+
   studentListNotifier.value.add(value);
   studentListNotifier.notifyListeners();
   //Since the ValueNotifier value doesn't change for list add, it is not automatically notofied to the listeners.
