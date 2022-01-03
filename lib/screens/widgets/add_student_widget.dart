@@ -1,6 +1,8 @@
 // ignore_for_file: avoid_print
 
 import 'package:flutter/material.dart';
+import 'package:local_database/db/functions/db_functions.dart';
+import 'package:local_database/db/model/data_model.dart';
 
 class AddStudentWidget extends StatelessWidget {
   AddStudentWidget({Key? key}) : super(key: key);
@@ -20,6 +22,9 @@ class AddStudentWidget extends StatelessWidget {
               border: OutlineInputBorder(),
               hintText: 'Name',
             ),
+          ),
+          const SizedBox(
+            height: 10.0,
           ),
           TextFormField(
             controller: _ageController,
@@ -46,6 +51,8 @@ class AddStudentWidget extends StatelessWidget {
     if (_name.isEmpty || _age.isEmpty) {
       return;
     }
-    print('$_name $_age');
+    //print('$_name $_age');
+    final _student = StudentModel(name: _name, age: _age);
+    addStudent(_student);
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:local_database/db/functions/db_functions.dart';
 import 'package:local_database/screens/widgets/add_student_widget.dart';
 import 'package:local_database/screens/widgets/list_student_widget.dart';
 
@@ -7,13 +8,14 @@ class ScreenHome extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    getAllStudents();
     return Scaffold(
       appBar: AppBar(
         title: const Text('Home'),
       ),
       body: SafeArea(
         child: Column(
-          children:  [
+          children: [
             AddStudentWidget(),
             const Expanded(
               child: ListStudentWidget(),

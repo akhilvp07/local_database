@@ -1,21 +1,43 @@
 import 'package:flutter/material.dart';
+import 'package:local_database/db/functions/db_functions.dart';
+import 'package:local_database/db/model/data_model.dart';
 
 class ListStudentWidget extends StatelessWidget {
   const ListStudentWidget({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return ListView.separated(
-      itemBuilder: (ctx, index) {
-        return ListTile(
-          title: Text('Name $index'),
-          subtitle: Text('Age $index'),
-        );
-      },
-      separatorBuilder: (ctx, index) {
-        return const Divider();
-      },
-      itemCount: 50,
-    );
+    return ValueListenableBuilder(
+        valueListenable: studentListNotifier,
+        builder: (
+          BuildContext ctx,
+          List<StudentModel> studentList,
+          Widget? child,
+        ) {
+          return ListView.separated(
+            itemBuilder: (ctx, index) {
+              final data = studentList[index];
+              return ListTile(
+                title: Text(data.name),
+                subtitle: Text(data.age),
+                trailing: IconButton(
+                  onPressed: () {
+                    if (data.id != null) {
+                      deleteStudent(data.id!);
+                    } else {
+                      print('Cannot delete student: id is null');
+                    }
+                  },
+                  icon: const Icon(Icons.delete),
+                  color: Colors.redAccent,
+                ),
+              );
+            },
+            separatorBuilder: (ctx, index) {
+              return const Divider();
+            },
+            itemCount: studentList.length,
+          );
+        });
   }
 }
