@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:local_database/db/functions/db_functions.dart';
 import 'package:local_database/screens/screen_home.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  //Init Hive and register adapter for each db.
+  //Init SQFlite
+  await initDatabase();
   runApp(const MyApp());
 }
 

@@ -1,37 +1,46 @@
 import 'package:flutter/foundation.dart';
 import 'package:local_database/db/model/data_model.dart';
+import 'package:sqflite/sqflite.dart';
 
 ValueNotifier<List<StudentModel>> studentListNotifier = ValueNotifier([]);
 
+late Database _db;
+
+Future<void> initDatabase() async {
+  _db = await openDatabase(
+    'student.db',
+    version: 1,
+    onCreate: (Database db, int version) async {
+      await db.execute(
+          'CREATE TABLE student (id INTEGER PRIMARY KEY, name TEXT, age TEXT)');
+    },
+  );
+}
+
 Future<void> addStudent(StudentModel value) async {
-  // final studentDB = await Hive.openBox<StudentModel>('student_db');
-  // final _id = await studentDB.add(value);
-
-  //Update the id in L add the new student
-  //value.id = _id;
-  //Update the id back to the DB
-  //await studentDB.put(_id, value);
-
-  studentListNotifier.value.add(value);
-  studentListNotifier.notifyListeners();
-  //Since the ValueNotifier value doesn't change for list add, it is not automatically notofied to the listeners.
-  //To avoid warning, use the below line instead of add/notofy steps.
-  //studentListNotifier.value = List.from(studentListNotifier.value)..add(value);
+  _db.rawInsert(
+      'INSERT INTO student(name, age) VALUES(?, ?)', [value.name, value.age]);
+  getAllStudents();
 }
 
 //read DB and add it to list.
 Future<void> getAllStudents() async {
-  //open DB
-  //final studentDB = await Hive.openBox<StudentModel>('student_db');
-  //Clear the List
+  final _values = await _db.rawQuery('SELECT * FROM student');
+  print(_values);
+
+  //Clear the local List
   studentListNotifier.value.clear();
-  //Add DB date to the List
-  //studentListNotifier.value.addAll(studentDB.values);
-  studentListNotifier.notifyListeners();
+
+  for (var map in _values) {
+    //Convert Map to StudentModel
+    final student = StudentModel.fromMap(map);
+    //Add DB data to the List
+    studentListNotifier.value.add(student);
+    studentListNotifier.notifyListeners();
+  }
 }
 
 Future<void> deleteStudent(int? id) async {
-  //final studentDB = await Hive.openBox<StudentModel>('student_db');
-  //await studentDB.delete(id);
+  await _db.rawDelete('DELETE FROM student WHERE id = ?', [id]);
   getAllStudents();
 }
