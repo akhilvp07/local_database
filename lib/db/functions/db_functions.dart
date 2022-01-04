@@ -1,17 +1,16 @@
 import 'package:flutter/foundation.dart';
-import 'package:hive_flutter/adapters.dart';
 import 'package:local_database/db/model/data_model.dart';
 
 ValueNotifier<List<StudentModel>> studentListNotifier = ValueNotifier([]);
 
 Future<void> addStudent(StudentModel value) async {
-  final studentDB = await Hive.openBox<StudentModel>('student_db');
-  final _id = await studentDB.add(value);
+  // final studentDB = await Hive.openBox<StudentModel>('student_db');
+  // final _id = await studentDB.add(value);
 
   //Update the id in L add the new student
-  value.id = _id;
+  //value.id = _id;
   //Update the id back to the DB
-  await studentDB.put(_id, value);
+  //await studentDB.put(_id, value);
 
   studentListNotifier.value.add(value);
   studentListNotifier.notifyListeners();
@@ -23,16 +22,16 @@ Future<void> addStudent(StudentModel value) async {
 //read DB and add it to list.
 Future<void> getAllStudents() async {
   //open DB
-  final studentDB = await Hive.openBox<StudentModel>('student_db');
+  //final studentDB = await Hive.openBox<StudentModel>('student_db');
   //Clear the List
   studentListNotifier.value.clear();
   //Add DB date to the List
-  studentListNotifier.value.addAll(studentDB.values);
+  //studentListNotifier.value.addAll(studentDB.values);
   studentListNotifier.notifyListeners();
 }
 
 Future<void> deleteStudent(int? id) async {
-  final studentDB = await Hive.openBox<StudentModel>('student_db');
-  await studentDB.delete(id);
+  //final studentDB = await Hive.openBox<StudentModel>('student_db');
+  //await studentDB.delete(id);
   getAllStudents();
 }
